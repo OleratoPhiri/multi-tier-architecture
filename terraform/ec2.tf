@@ -22,9 +22,9 @@ resource "aws_launch_template" "web" {
   instance_type = var.instance_type
 
   # Attach the IAM role to EC2 
-  # iam_instance_profile {
-  #  name = aws_iam_instance_profile.ec2_profile.name
- # }
+   iam_instance_profile {
+    name = aws_iam_instance_profile.ec2_profile.name
+  }
 
   # Attach the EC2 security group
   vpc_security_group_ids = [aws_security_group.ec2.id]
