@@ -1,23 +1,26 @@
 #!/bin/bash
-# Update all system packages
+set -e
+exec > /var/log/user-data.log 2>&1
+
+echo "Starting user data script..."
+
+# Update packages
 yum update -y
+echo "Packages updated"
 
-# Install Apache web server
+# Install Apache
 yum install -y httpd
+echo "Apache installed"
 
-# Install MySQL client (so that EC2 connect to RDS)
-yum install -y mysql
-
-# Starts and enables Apache to start on every reboot
+# Start Apache
 systemctl start httpd
 systemctl enable httpd
+echo "Apache started"
 
-# Get the private IP of this specific EC2 instance from AWS metadata
-# This is useful for seeing which server is handling your request
-INSTANCE_IP=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
-INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+# Verify Apache is running
+systemctl status httpd
 
-# This proves the web server is running and shows which instance served it
+# Create webpage
 cat > /var/www/html/index.html << 'EOF'
 <!DOCTYPE html>
 <html lang="en">
@@ -67,5 +70,5 @@ cat > /var/www/html/index.html << 'EOF'
 </html>
 EOF
 
-# Signal that user data completed successfully
-echo "User data script completed" >> /var/log/user-data.log
+echo "Webpage created"
+echo "User data script completed successfully"
