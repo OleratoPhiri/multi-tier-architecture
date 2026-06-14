@@ -9,24 +9,24 @@ A production-grade, highly available web infrastructure built on AWS using Terra
 ```
                           INTERNET
                               |
-                    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\[Internet Gateway]
+                     [Internet Gateway]
                               |
                  ┌────────────────────────┐
                  │      PUBLIC SUBNETS     │
                  │  AZ1 (10.0.1.0/24)     │
                  │  AZ2 (10.0.2.0/24)     │
-                 │  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\[Network Load Balancer]│
-                 │  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\[NAT Gateway]          │
+                 │ [Network Load Balancer]│
+                 │ [NAT Gateway]          │
                  └────────────────────────┘
-                         /        \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-            ┌───────────┐          ┌───────────┐
+                         /          \
+            ┌───────────┐           ┌───────────┐
             │  PRIVATE   │          │  PRIVATE   │
             │  SUBNET    │          │  SUBNET    │
             │    AZ1     │          │    AZ2     │
             │ 10.0.3.0/24│          │ 10.0.4.0/24│
-            │ \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\[EC2 Web]  │          │ \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\[EC2 Web]  │
-            │ \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\[RDS Pri]  │◄────────►│ \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\[RDS Stby] │
-            └───────────┘  sync    └───────────┘
+            │  EC2 Web]  │          │ [EC2 Web]  │
+            │ [RDS Pri]  │◄────────►│[RDS Stby]  │
+            └───────────┘    sync   └───────────┘
 ```
 
 **Traffic flow:**
@@ -106,7 +106,7 @@ touch terraform.tfvars
 Add database password to `terraform.tfvars`:
 
 ```hcl
-db\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_password = "Password"
+db_password = "Password"
 ```
 
 > `terraform.tfvars` is in `.gitignore` — it will never be pushed to GitHub
@@ -134,10 +134,10 @@ Type `yes` when prompted. RDS Multi-AZ takes 10-15 minutes to provision.
 **6. Gets Load Balancer URL from the outputs**
 
 ```bash
-terraform output nlb\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_dns\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_name
+terraform output nlb_dns_name
 ```
 
-Open `http://NLB DNS-Name` in browser.
+Open `http://NLB-DNS-Name` in browser.
 
 **7. Destroy when done (to avoid costs)**
 
@@ -161,7 +161,7 @@ multi-tier-architecture/
 │   ├── iam.tf            # IAM role, policy, and instance profile for EC2
 │   └── outputs.tf        # NLB DNS name, RDS endpoint, VPC ID
 ├── scripts/
-│   └── user\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_data.sh      # Bootstrap script — installs Apache on EC2 launch
+│   └── user_data.sh      # Bootstrap script — installs Apache on EC2 launch
 └── README.md
 ```
 
